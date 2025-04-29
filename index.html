@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Palindrome Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="site-title">PALINDROME CHECKER</h1>
+    <p class="site-subtitle">Discover the Magic of Words That Mirror Themselves</p>
+  </header>
+
+  <section class="intro-section">
+    <img src="https://images.unsplash.com/photo-1581287053704-1c07505b945c" alt="Mirror Image" class="hero-image">
+    <div class="intro-text">
+      <h2>What is a Palindrome?</h2>
+      <p>
+        A palindrome is a word, phrase, number, or sequence of characters that reads the same backward as forward.
+        Examples include <strong>racecar</strong>, <strong>level</strong>, and <strong>madam</strong>.  
+        Palindromes are surprisingly common in the English language and often appear in literature, branding, and even dates!
+      </p>
+    </div>
+  </section>
+
+  <section class="checker-section">
+    <h2>Check Your Word!</h2>
+    <div class="checker-box">
+      <input type="text" id="palindrome-input" placeholder="Enter a word..." />
+      <button id="check-button">Check</button>
+      <div id="result" class="result-box"></div>
+    </div>
+  </section>
+
+
+  <script>
+    document.getElementById('check-button').addEventListener('click', async () => {
+      const input = document.getElementById('palindrome-input').value.trim();
+      const resultBox = document.getElementById('result');
+
+      if (input.length === 0) {
+        resultBox.textContent = "Please enter a word.";
+        resultBox.style.color = "red";
+        return;
+      }
+
+      try {
+        const response = await fetch('/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ word: input })
+        });
+        const data = await response.json();
+
+        if (data.isPalindrome) {
+          resultBox.textContent = `"${input}" is a palindrome!`;
+          resultBox.style.color = "green";
+        } else {
+          resultBox.textContent = `"${input}" is not a palindrome.`;
+          resultBox.style.color = "darkred";
+        }
+      } catch (error) {
+        resultBox.textContent = "Error connecting to server.";
+        resultBox.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>
